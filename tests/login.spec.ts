@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
 import { InventoryPage } from '../pages/InventoryPage';
-import { USERS,TEXT,PATH } from '../test-data/testData'; 
+import { USERS,TEXT,PATH ,LOGINERRORMESSAGE} from '../test-data/testData';
+
+
 
 test('valid login', async ({page}) => {
    const loginPage = new LoginPage(page);
@@ -24,3 +26,20 @@ test('valid Swag Labs first page', async ({ page }) => {
     await expect(page.getByTestId('login-button')).toBeVisible();
 
 });
+const invalidLogins= [
+    {name:'empty password', username:USERS.standard , password:'' , error:LOGINERRORMESSAGE.errorEmptyPassword },
+    {name:'empty username' , username: '', password:process.env.SAUCE_PASSWORD!, error:LOGINERRORMESSAGE.errorEmptyUsername },
+    {name:'locked user' , username:USERS.locked , password:process.env.SAUCE_PASSWORD! , error: LOGINERRORMESSAGE.errorLockedUser},
+    {name:'wrong credentials' , username:USERS.random , password:process.env.SAUCE_PASSWORD! , error: LOGINERRORMESSAGE.errorWrongCredentials},
+];
+
+for(const data of invalidLogins){
+test(`invalid login: ${data.name}`, async ({page}) =>{
+   const loginPage = new LoginPage(page);
+   await loginPage.goto();
+   await loginPage.login(data.username,data.password);
+   await expect(loginPage.errorMessage).toHaveText(data.error)
+   await expect(page).toHaveURL('/');
+
+});
+}
