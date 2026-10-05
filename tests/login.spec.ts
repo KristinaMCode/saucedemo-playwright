@@ -3,7 +3,6 @@ import { LoginPage } from '../pages/LoginPage';
 import { InventoryPage } from '../pages/InventoryPage';
 import { USERS,TEXT,PATH } from '../test-data/testData'; 
 
-
 test('valid login', async ({page}) => {
    const loginPage = new LoginPage(page);
    const inventoryPage = new InventoryPage(page);
