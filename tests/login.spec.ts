@@ -11,7 +11,9 @@ test('valid login', async ({page}) => {
    await loginPage.goto();
    await loginPage.login(USERS.standard,process.env.SAUCE_PASSWORD!);
    await expect(page).toHaveURL(PATH.inventory);
-   await expect(inventoryPage.appLogo).toHaveText(TEXT.logo);
+   await expect(inventoryPage.logoTitle).toHaveText(TEXT.logo);
+   await expect(inventoryPage.headerMenu).toBeVisible();
+   await expect(inventoryPage.headerCart).toBeVisible();
 
 });
 
