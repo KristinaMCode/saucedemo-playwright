@@ -1,12 +1,13 @@
-import { Page, Locator } from '@playwright/test';
-export class InventoryPage{
-    readonly page:Page;
-    readonly appLogo : Locator;
+import { HeaderPage } from './HeaderPage';
+import { PATH } from '../test-data/testData';
 
-    constructor (page:Page){
-        this.page = page;
-        this.appLogo = page.locator('.app_logo');
+export class InventoryPage extends HeaderPage {
+readonly path = PATH.inventory;
+
+    async addToCart(item: string) {
+        item = item.replaceAll(" ", "-").toLowerCase();
+        await this.page.locator('#add-to-cart-' + item).click();
     }
 
-  
+
 }
