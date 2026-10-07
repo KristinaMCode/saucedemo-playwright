@@ -3,16 +3,22 @@ import { InventoryPage } from '../../pages/InventoryPage';
 import { LoginPage } from '../../pages/LoginPage';
 import { PATH, USERS, TEXT } from '../../test-data/testData';
 import { CartPage } from '../../pages/CartPage';
-let loginPage : LoginPage;
-let inventoryPage : InventoryPage;
+let loginPage: LoginPage;
+let inventoryPage: InventoryPage;
 
 test.beforeEach(async ({ page }) => {
-   loginPage = new LoginPage(page);
+    loginPage = new LoginPage(page);
     inventoryPage = new InventoryPage(page);
     await loginPage.goto();
     await loginPage.login(USERS.standard, process.env.SAUCE_PASSWORD!);
     await expect(page).toHaveURL(PATH.inventory);
 
+});
+
+test('header is displayed after login', async ({ page }) => {
+    await expect(inventoryPage.logoTitle).toHaveText(TEXT.logo);
+    await expect(inventoryPage.headerMenu).toBeVisible();
+    await expect(inventoryPage.cartLink).toBeVisible();
 });
 
 test('User put an item in a cart', async ({ page }) => {
