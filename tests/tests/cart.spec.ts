@@ -31,19 +31,41 @@ test('User put an item in a cart', async ({ page }) => {
     await expect(cartPage.cartBadge).toHaveText('1');
 });
 
-const listOfItems= [
-    {name:'2', items:[TEXT.backpack, TEXT.bikeLight] , numberOfItems: '2'},
-    
+const listOfItems = [
+    { name: '2', items: [TEXT.backpack, TEXT.bikeLight], numberOfItems: '2' },
+
 ];
 
-for(const data of listOfItems){
-test(`User puts ${data.name} items in a cart`, async ({ page }) => {
-    const cartPage = new CartPage(page);
-    await inventoryPage.addMoreItemsToCart(data.items);
-    await expect(inventoryPage.cartBadge).toHaveText(data.numberOfItems);
-    await inventoryPage.openCart();
-    await expect(cartPage.cartTitle).toHaveText(TEXT.cartTitle);
-    await expect(cartPage.inventoryItem).toHaveText(data.items);
-    await expect(cartPage.cartBadge).toHaveText(data.numberOfItems);
-});
+for (const data of listOfItems) {
+    test(`User puts ${data.name} items in a cart`, async ({ page }) => {
+        const cartPage = new CartPage(page);
+        await inventoryPage.addMoreItemsToCart(data.items);
+        await expect(inventoryPage.cartBadge).toHaveText(data.numberOfItems);
+        await inventoryPage.openCart();
+        await expect(cartPage.cartTitle).toHaveText(TEXT.cartTitle);
+        await expect(cartPage.inventoryItem).toHaveText(data.items);
+        await expect(cartPage.cartBadge).toHaveText(data.numberOfItems);
+    });
+
+    const listOfItems = [
+        { name: '3', items: [TEXT.backpack, TEXT.bikeLight, TEXT.jacket],removedItem: TEXT.bikeLight },
+
+    ];
+
+    for (const data of listOfItems) {
+        test(`remove one of ${data.name} items from the cart`, async ({ page }) => {
+            const cartPage = new CartPage(page);
+            const expectedCount = String(data.items.length );
+            const newCount = String(data.items.length-1);
+            const expectedItems = data.items.filter(item => item !== data.removedItem);
+            await inventoryPage.addMoreItemsToCart(data.items);
+            await expect(inventoryPage.cartBadge).toHaveText(expectedCount);
+            await inventoryPage.removeFromCart(data.removedItem);
+            await inventoryPage.openCart();
+            await expect(inventoryPage.cartBadge).toHaveText(newCount);
+            await expect(cartPage.cartTitle).toHaveText(TEXT.cartTitle);
+            await expect(cartPage.inventoryItem).toHaveText(expectedItems);
+            await expect(cartPage.cartBadge).toHaveText(newCount);
+        });
+    }
 }

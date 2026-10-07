@@ -15,4 +15,9 @@ export class InventoryPage extends HeaderPage {
 
     }
 
+    async removeFromCart(item: string) {
+        item = item.replaceAll(" ", "-").toLowerCase();
+        await this.page.getByTestId('remove-' + item).click();
+    }
+
 }
