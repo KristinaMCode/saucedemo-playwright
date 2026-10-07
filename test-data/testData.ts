@@ -7,6 +7,7 @@ export const USERS = {
 export const TEXT = {
     logo : 'Swag Labs',
     backpack: 'Sauce Labs Backpack',
+    bikeLight: 'Sauce Labs Bike Light',
     cartTitle: 'Your Cart',
 }
 
